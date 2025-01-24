@@ -1,0 +1,21 @@
+<h2>Service Request Confirmation</h2>
+
+<p><strong>Name:</strong> {{ service_request.user.first_name }} {{ service_request.user.last_name }}</p>
+<p><strong>Address:</strong> {{ service_request.address }}</p>
+<p><strong>Date:</strong> {{ service_request.date }}</p>
+<p><strong>Time:</strong> {{ service_request.time }}</p>
+
+<h4>Selected Services:</h4>
+<ul>
+    {% for service in service_request.services.all %}
+        <li>{{ service.name }} - ${{ service.cost }}</li>
+    {% endfor %}
+</ul>
+
+<p><strong>Total Cost:</strong> ${{ total_cost }}</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" name="confirm_request">Confirm Request</button>
+    <a href="{% url 'service_request' %}">Cancel</a>
+</form>

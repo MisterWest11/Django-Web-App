@@ -1,0 +1,20 @@
+{% extends 'yardapp/base.html' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center">Your Profile</h2>
+    <div class="card mt-3">
+        <div class="card-body">
+            <img src="{{ }}" alt="">
+            <h5 class="card-title">Welcome, {{ user.first_name }} {{ user.last_name }}</h5>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Address:</strong> {{ user.userprofile.address }}</p>
+            <p><strong>City:</strong> {{ user.userprofile.city }}</p>
+            <p><strong>Province:</strong> {{ user.userprofile.province }}</p>
+            <p><strong>Phone:</strong> {{ user.userprofile.phone }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

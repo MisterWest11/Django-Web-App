@@ -1,0 +1,20 @@
+{% extends 'yardapp/base.html' %}
+
+{% block title %}Services{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center">Our Services</h2>
+    <div class="row">
+        {% for service in services %}
+        <div class="service-card">
+            <h3>{{ service.name }}</h3>
+            <p>{{ service.description }}</p>
+            <p><strong>Price:</strong> ${{ service.price }}</p>
+            <img src="{{ service.image.url }}" alt="{{ service.name }}" style="max-width: 200px;" />
+            <a href="{% url 'service_request' service.id %}" class="btn btn-primary">Request Service</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

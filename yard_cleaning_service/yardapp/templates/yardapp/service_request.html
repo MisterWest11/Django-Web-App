@@ -1,0 +1,18 @@
+{% extends 'yardapp/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+    
+        <label>Select Services:</label><br>
+        {% for service in services %}
+            <input type="checkbox" name="services" value="{{ service.id }}"> {{ service.name }} - ${{ service.cost }}<br>
+        {% endfor %}
+    
+        <button type="submit">Submit Request</button>
+    </form>
+</div>
+{% endblock %}

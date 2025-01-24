@@ -1,0 +1,32 @@
+<h2>Admin Service Requests</h2>
+<table border="1">
+    <thead>
+        <tr>
+            <th>User</th>
+            <th>Services</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for request in requests %}
+        <tr>
+            <td>{{ request.user.first_name }} {{ request.user.last_name }}</td>
+            <td>{{ request.services.all|join:", " }}</td>
+            <td>{{ request.date }}</td>
+            <td>{{ request.time }}</td>
+            <td>{{ request.status }}</td>
+            <td>
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="request_id" value="{{ request.id }}">
+                    <button type="submit" name="action" value="accept">Accept</button>
+                    <button type="submit" name="action" value="decline">Decline</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
