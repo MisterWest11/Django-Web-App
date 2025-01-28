@@ -1,0 +1,18 @@
+{% extends 'yardapp/base.html' %}
+
+{% block title %}Service Request Success{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card text-center">
+        <div class="card-header">
+            <h2>Service Request Success</h2>
+        </div>
+        <div class="card-body">
+            <h1 class="card-title">Thank you for your service request!</h1>
+            <p class="card-text">Your request has been successfully submitted. We will contact you shortly.</p>
+            <a href="{% url 'home' %}" class="btn btn-primary">Back to Home</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

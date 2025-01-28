@@ -62,14 +62,23 @@ class OrderItem(models.Model):
     
 # Create a model for the service request
 class ServiceRequest(models.Model):
+    PENDING = 'Pending'
+    ACCEPTED = 'Accepted'
+    REJECTED = 'Rejected'
+
+    STATUS_CHOICES = [
+        (PENDING, 'Pending'),
+        (ACCEPTED, 'Accepted'),
+        (REJECTED, 'Rejected'),
+    ]
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    service = models.ManyToManyField('Service')  # Assuming you have a Service model
+    services = models.ManyToManyField(Service)  # Assuming you have a Service model
     date = models.DateField()
-    time = models.TimeField()
     address = models.CharField(max_length=100)
     special_instructions = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, default='Pending')
 
     def __str__(self):
-        return f"{self.user.first_name} {self.user.last_name} - {self.service.name} on {self.date} at {self.time}"
+        services_names = ', '.join([service.service_name for service in self.services.all()])
+        return f"{self.user.first_name} {self.user.last_name} - {services_names} on {self.date}"

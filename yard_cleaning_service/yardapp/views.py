@@ -56,11 +56,10 @@ def services_view(request):
 @login_required
 def place_order(request, service_id):
     service = get_object_or_404(Service, id=service_id)
-    if request.method == 'POST':
-        # Placeholder for saving the order logic
-        messages.success(request, f"You've successfully ordered: {service.service_name}!")
-        return redirect('services')
-    return redirect('services')
+    
+    request.session['service_id'] = service.id
+
+    return redirect('service_request')  # Redirect to the service request page
 
 @login_required
 def profile(request):
@@ -76,15 +75,17 @@ def logout_view(request):
 @login_required
 # service request view
 def service_request(request, service_id):
+    selected_service_id = request.session.get('service_id')
     if request.method == 'POST':
         form = ServiceRequestForm(request.POST)
         if form.is_valid():
+            # fetch the user's address from their profile
+            address = request.user.userprofile.address
             # Save the service request but don't finalize yet
             service_request = ServiceRequest(
                 user=request.user,
                 date=form.cleaned_data['date'],
-                time=form.cleaned_data['time'],
-                address=form.cleaned_data['address'],
+                address=address,  # Use the user's address
                 special_instructions=form.cleaned_data['special_instructions']
             )
             service_request.save()
@@ -92,28 +93,36 @@ def service_request(request, service_id):
             
             # Store the service request ID in session to pass to the confirmation page
             request.session['service_request_id'] = service_request.id
-            
+            print("Service request ID set in session:", request.session.get('service_request_id'))
             # Redirect to confirmation page
-            return redirect('service_request_confirmation')
+            print("Redirecting to confirmation page")  # Debug statement
+            return redirect('service_request_confirmation')  # Redirect to the confirmation page if the form is valid
+        else:
+            print("Form is not valid")  # Debug statement
+            print(form.errors)  # Print form errors for debugging
 
     else:
-        form = ServiceRequestForm()
+        selected_service_id = request.session.get('service_id')
+        # Prefill the form with the selected service, if any
+        initial_data = {'services': [selected_service_id]} if selected_service_id else {}
+        form = ServiceRequestForm(initial=initial_data)
 
-    return render(request, 'yardapp/service_request.html', {'form': form})
+    return render(request, 'yardapp/service_request.html', {'form': form}) # render the service request form if the form is not valid
 
 # 
 @login_required
 def service_request_confirmation(request):
     service_request_id = request.session.get('service_request_id')
     if not service_request_id:
-        return redirect('service_request')  # Redirect if no service request in session
+        return redirect('service_request', service_id =1)  # Redirect if no service request in session
 
     # Retrieve the ServiceRequest instance
     service_request = get_object_or_404(ServiceRequest, id=service_request_id)
 
     # Calculate total cost of the selected services
-    total_cost = sum(service.cost for service in service_request.services.all())
+    total_cost = sum(service.price for service in service_request.services.all())
 
+# Send confirmation email to the user
     if request.method == 'POST':
         if 'confirm_request' in request.POST:
             # Send confirmation email to the user
@@ -121,18 +130,17 @@ def service_request_confirmation(request):
                 'Service Request Confirmation',
                 f"""Hello {service_request.user.first_name},
 
-Thank you for your request! Here are the details:
-- Services: {', '.join(service.name for service in service_request.services.all())}
+Thank you for your service request! Below are the details:
+- Services: {', '.join(service.service_name for service in service_request.services.all())}
 - Address: {service_request.address}
 - Date: {service_request.date}
-- Time: {service_request.time}
 - Total Cost: ${total_cost}
 
-We will contact you shortly.
+We will contact you soon.
 
-Best regards,
+Best regards,  
 The Yard Cleaning Service Team
-                """,
+""",
                 settings.DEFAULT_FROM_EMAIL,
                 [service_request.user.email],
                 fail_silently=False,
@@ -145,7 +153,8 @@ The Yard Cleaning Service Team
 
 A new service request has been submitted:
 - User: {service_request.user.first_name} {service_request.user.last_name}
-- Services: {', '.join(service.name for service in service_request.services.all())}
+- Services: {', '.join(service.service_name for service in service_request.services.all())}
+- Address: {service_request.address}
 - Total Cost: ${total_cost}
 
 Please review and follow up.
@@ -165,4 +174,8 @@ Yard Cleaning Service System
         'service_request': service_request,
         'total_cost': total_cost,
     })
-# 
+
+# service request success view
+@login_required
+def service_request_success(request):
+    return render(request, 'yardapp/service_request_success.html')

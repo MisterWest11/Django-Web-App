@@ -7,17 +7,7 @@ class EmailLoginForm(forms.Form):
     email = forms.EmailField(required=True, label="Email")
     password = forms.CharField(widget=forms.PasswordInput, required=True, label="Password")
 
-# Service Request Form
-class ServiceRequestForm(forms.Form):
-    class Meta:
-        model = ServiceRequest
-        fields = ['services', 'date', 'time', 'address', 'special_instructions']
-        widgets = {
-            'services': forms.Select(attrs={'class': 'form-select'}),
-            'date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'time': forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'}),
-            'special_instructions': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-        }
+
 
 # Custom User Registration Form
 class CustomUserCreationForm(forms.ModelForm):
@@ -74,10 +64,16 @@ class CustomUserCreationForm(forms.ModelForm):
     
 # Custom Service Request Form
 class ServiceRequestForm(forms.ModelForm):
+    services = forms.ModelMultipleChoiceField(
+        queryset=Service.objects.all(),
+        widget=forms.CheckboxSelectMultiple(),
+        required=True
+    )
+
     class Meta:
         model = ServiceRequest
-        fields = ['service', 'date', 'time', 'special_instructions']
+        fields = ['services', 'date', 'special_instructions']
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date'}),
-            'time': forms.TimeInput(attrs={'type': 'time'}),
+            'special_instructions': forms.Textarea(attrs={'rows': 3}),
         }

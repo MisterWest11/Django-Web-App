@@ -32,6 +32,7 @@ urlpatterns = [
     path('service_request/<int:service_id>/', views.service_request, name='service_request'), # service request url
     #path('admin/requests/', views.admin_request_list, name='admin_request_list'), # admin request list url
     path('service_request_confirmation/', views.service_request_confirmation, name='service_request_confirmation'),
+    path('service_request_success/', views.service_request_success, name='service_request_success'),
 ]
 
 # serve media files during development

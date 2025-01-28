@@ -2,16 +2,24 @@
 
 {% block content %}
 <div class="container mt-5">
+
+    <h2 class="text-center">Service Request Form</h2>
     
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
-    
-        <label>Select Services:</label><br>
-        {% for service in services %}
-            <input type="checkbox" name="services" value="{{ service.id }}"> {{ service.name }} - ${{ service.cost }}<br>
-        {% endfor %}
-    
+        {{ form.non_field_errors }}
+        <div>
+            <label for="services">Select Services:</label>
+            {{ form.services }}
+        </div>
+        <div>
+            <label for="date">Date:</label>
+            {{ form.date }}
+        </div>
+        <div>
+            <label for="special_instructions">Special Instructions:</label>
+            {{ form.special_instructions }}
+        </div>
         <button type="submit">Submit Request</button>
     </form>
 </div>

@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 from decouple import config
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -51,14 +55,14 @@ LOGIN_URL = '/login/' # Set the login URL
 LOGIN_REDIRECT_URL = '/profile' # Set the redirect URL after login
 LOGOUT_REDIRECT_URL = '/' # Set the redirect URL after logout
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # Use the console backend for email
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' # Use the console backend for email
 EMAIL_HOST = 'smtp.gmail.com' # SMTP server for sending email
 EMAIL_PORT = 587 # Port for the SMTP server
 EMAIL_USE_TLS = True # Use TLS for the SMTP server
-MAIL_HOST_USER = config('EMAIL_HOST_USER') # Email address for sending email
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD') # Password for the email address
-DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL') # Default email address for sending email
-ADMIN_EMAIL = config('ADMIN_EMAIL') # Email address for the admin
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER') # Email address for sending email
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD') # Password for the email address
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL') # Default email address for sending email
+ADMIN_EMAIL = os.getenv('ADMIN_EMAIL') # Email address for the admin
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
