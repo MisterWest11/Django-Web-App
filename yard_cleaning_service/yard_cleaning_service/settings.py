@@ -145,8 +145,9 @@ STATIC_URL = 'static/'
 # Media files (Uploaded by users)
 # These settings are for handling file uploads like profile pictures
 
+
 MEDIA_URL = '/media/'  # URL for accessing uploaded media files in the browser
-MEDIA_ROOT = BASE_DIR / 'media'  # Absolute path to the directory where uploaded files are stored
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Absolute path to the directory where uploaded files are stored
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

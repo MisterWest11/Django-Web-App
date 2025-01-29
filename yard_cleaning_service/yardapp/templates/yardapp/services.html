@@ -4,18 +4,25 @@
 
 {% block content %}
 <div class="container mt-5">
-    <h2 class="text-center">Our Services</h2>
+    <h2 class="text-center mb-4">Our Services</h2>
+
     <div class="row">
         {% for service in services %}
-        <div class="service-card">
-            <h3>{{ service.name }}</h3>
-            <p>{{ service.description }}</p>
-            <p><strong>Price:</strong> ${{ service.price }}</p>
-            <img src="{{ service.image.url }}" alt="{{ service.name }}" style="max-width: 200px;" />
-            <a href="{% url 'service_request' service.id %}" class="btn btn-primary">Request Service</a>
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <img src="{{ service.image.url }}" class="card-img-top" alt="{{ service.name }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ service.name }}</h5>
+                    <p class="card-text">{{ service.description }}</p>
+                    <p class="fw-bold">Price: ${{ service.price }}</p>
+                </div>
+            </div>
         </div>
         {% endfor %}
     </div>
-    
+
+    <div class="text-center mt-4">
+        <a href="{% url 'service_request' %}" class="btn btn-primary btn-lg">Request a Service</a>
+    </div>
 </div>
 {% endblock %}

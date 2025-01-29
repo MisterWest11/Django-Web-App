@@ -9,11 +9,16 @@ from .forms import CustomUserCreationForm, EmailLoginForm, ServiceRequestForm
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.conf import settings
+import os
+from .models import UserProfile
 
 # Create your views here.
 
 def home(request):
-    return render(request, 'yardapp/home.html')
+    media_path = os.path.join(settings.MEDIA_ROOT, 'services_images')
+    image_files = [f"media/services_images/{img}" for img in os.listdir(media_path) if img.endswith(('.jpg', '.jpeg', '.png', '.gif', '.jfif'))]
+
+    return render(request, 'yardapp/home.html', {'images': image_files})
 
 # register view
 
@@ -74,13 +79,16 @@ def logout_view(request):
 
 @login_required
 # service request view
-def service_request(request, service_id):
+def service_request(request):
     selected_service_id = request.session.get('service_id')
+
+    user_profile, created = UserProfile.objects.get_or_create(user=request.user)
+
     if request.method == 'POST':
         form = ServiceRequestForm(request.POST)
         if form.is_valid():
             # fetch the user's address from their profile
-            address = request.user.userprofile.address
+            address = user_profile.address
             # Save the service request but don't finalize yet
             service_request = ServiceRequest(
                 user=request.user,
@@ -132,8 +140,13 @@ def service_request_confirmation(request):
 
 Thank you for your service request! Below are the details:
 - Services: {', '.join(service.service_name for service in service_request.services.all())}
+
 - Address: {service_request.address}
+
 - Date: {service_request.date}
+
+- Status: {service_request.status}
+
 - Total Cost: ${total_cost}
 
 We will contact you soon.
@@ -152,9 +165,17 @@ The Yard Cleaning Service Team
                 f"""Admin,
 
 A new service request has been submitted:
+
 - User: {service_request.user.first_name} {service_request.user.last_name}
+
 - Services: {', '.join(service.service_name for service in service_request.services.all())}
+
 - Address: {service_request.address}
+
+- Date: {service_request.date}
+
+-Staus: {service_request.status}
+
 - Total Cost: ${total_cost}
 
 Please review and follow up.
@@ -166,6 +187,32 @@ Yard Cleaning Service System
                 [settings.ADMIN_EMAIL],
                 fail_silently=False,
             )
+
+            # If the request is accepted, send an additional email to the user
+            if service_request.status == 'Accepted':
+                send_mail(
+                    'Service Request Accepted',
+                    f"""Hello {service_request.user.first_name},
+
+Your service request has been {service_request.status}! Here are the details:
+
+- Services: {', '.join(service.service_name for service in service_request.services.all())}
+
+- Address: {service_request.address}
+
+- Date: {service_request.date}
+
+- Total Cost: ${total_cost}
+
+Thank you for choosing us! We look forward to assisting you.
+
+Best regards,
+The Yard Cleaning Service Team
+""",
+                    settings.DEFAULT_FROM_EMAIL,
+                    [service_request.user.email],
+                    fail_silently=False,
+                )
 
             # Redirect to a success page
             return redirect('service_request_success')

@@ -75,5 +75,5 @@ class ServiceRequestForm(forms.ModelForm):
         fields = ['services', 'date', 'special_instructions']
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date'}),
-            'special_instructions': forms.Textarea(attrs={'rows': 3}),
+            'special_instructions': forms.TextInput(attrs={'rows': 3}),
         }
