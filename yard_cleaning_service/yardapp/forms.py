@@ -24,7 +24,7 @@ class CustomUserCreationForm(forms.ModelForm):
     city = forms.CharField(max_length=50, required=True)
     province = forms.CharField(max_length=50, required=True)
     zip_code = forms.CharField(max_length=10, required=True)
-    profile_pic = forms.ImageField(required=False)
+    
 
     class Meta:
         model = User
@@ -58,7 +58,7 @@ class CustomUserCreationForm(forms.ModelForm):
                 city=self.cleaned_data['city'],
                 province=self.cleaned_data['province'],
                 zip_code=self.cleaned_data['zip_code'],
-                profile_pic=self.cleaned_data.get('profile_pic'),
+                
             )
         return user
     

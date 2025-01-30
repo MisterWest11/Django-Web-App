@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="container mt-5">
-    <h2 class="text-center mb-4">Our Services</h2>
+    <h2 class="text-center mb-4 text-white">Our Services</h2>
 
     <div class="row">
         {% for service in services %}
@@ -12,9 +12,9 @@
             <div class="card shadow-sm">
                 <img src="{{ service.image.url }}" class="card-img-top" alt="{{ service.name }}">
                 <div class="card-body">
-                    <h5 class="card-title">{{ service.name }}</h5>
+                    <h5 class="card-title fw-bold">{{ service.service_name }}</h5>
                     <p class="card-text">{{ service.description }}</p>
-                    <p class="fw-bold">Price: ${{ service.price }}</p>
+                    <p class="fw-bold">Price: R{{ service.price }}</p>
                 </div>
             </div>
         </div>
@@ -22,7 +22,7 @@
     </div>
 
     <div class="text-center mt-4">
-        <a href="{% url 'service_request' %}" class="btn btn-primary btn-lg">Request a Service</a>
+        <a href="{% url 'service_request' %}" class="btn btn-light btn-lg">Request a Service</a>
     </div>
 </div>
 {% endblock %}

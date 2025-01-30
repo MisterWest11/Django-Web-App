@@ -4,41 +4,104 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="text-center">
-        <h1>Welcome to Yard Cleaning Service</h1>
-        <p>Your trusted partner for yard maintenance and cleaning.</p>
-        <a href="/services/" class="btn btn-primary mt-3">View Our Services</a>
+<!-- Hero Section -->
+<div class="container-fluid bg-success text-white text-center py-5">
+    <h1>Welcome to Yard Cleaning Service</h1>
+    <p>Your trusted partner for a clean and beautiful yard</p>
+    <a href="{% url 'services' %}" class="btn btn-light btn-lg mt-3">Explore Our Services</a>
+</div>
+
+<!-- Carousel Section -->
+<div id="yardCleaningCarousel" class="carousel slide mt-5" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+        {% for image in images %}
+        <button type="button" data-bs-target="#yardCleaningCarousel" data-bs-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %} aria-label="Slide {{ forloop.counter }}"></button>
+        {% endfor %}
     </div>
-
-    <!-- Bootstrap Carousel -->
-    <div id="yardCleaningCarousel" class="carousel slide mt-5" data-bs-ride="carousel">
-        
-        <!-- Carousel Indicators -->
-        <div class="carousel-indicators">
-            {% for image in images %}
-                <button type="button" data-bs-target="#yardCleaningCarousel" data-bs-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %} aria-label="Slide {{ forloop.counter }}"></button>
-            {% endfor %}
+    <div class="carousel-inner">
+        {% for image in images %}
+        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+            <img src="{{ image }}" class="d-block w-100" alt="Service Image">
         </div>
+        {% endfor %}
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#yardCleaningCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#yardCleaningCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
 
-        <!-- Carousel Items -->
-        <div class="carousel-inner">
-            {% for image in images %}
-                <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                    <img src="{{ image }}" class="d-block w-100" alt="Service Image">
+<!-- About Us Section -->
+<div class="container mt-5">
+    <h2 class="text-center text-white">About Us</h2>
+    <div class="row mt-4">
+        <div class="col-md-6">
+           
+        </div>
+        <div class="col-md-6 fs-5">
+            <p>Welcome to Yard Cleaning Service, your trusted partner for maintaining a clean and beautiful yard. We are dedicated to providing top-notch yard cleaning services to our valued clients. Our team of experienced professionals is committed to delivering exceptional results, ensuring your yard looks its best all year round.</p>
+            <p>Our services include lawn mowing, garden maintenance, leaf removal, and more. We use the latest equipment and techniques to ensure efficient and thorough cleaning. Whether you need a one-time service or regular maintenance, we are here to help.</p>
+            <p>At Yard Cleaning Service, customer satisfaction is our top priority. We take pride in our work and strive to exceed your expectations with every job. Thank you for choosing us as your yard cleaning service provider. We look forward to serving you!</p>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <h3 class="text-white">Our Mission</h3>
+            <p class="fs-5">Our mission is to provide high-quality yard cleaning services that enhance the beauty and health of our clients' outdoor spaces. We aim to achieve this through our commitment to excellence, attention to detail, and dedication to customer satisfaction.</p>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <h3 class="text-white">Our Vision</h3>
+            <p class="fs-5">Our vision is to be the leading yard cleaning service provider in the region, known for our reliability, professionalism, and exceptional results. We strive to create lasting relationships with our clients by consistently delivering outstanding service and value.</p>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <h3 class="text-white">Our Values</h3>
+            <ul class="fs-5">
+                <li><strong>Quality:</strong> We are committed to providing the highest quality services to our clients.</li>
+                <li><strong>Integrity:</strong> We conduct our business with honesty and transparency.</li>
+                <li><strong>Customer Satisfaction:</strong> We prioritize our clients' needs and work hard to exceed their expectations.</li>
+                <li><strong>Innovation:</strong> We continuously seek new and improved methods to enhance our services.</li>
+                <li><strong>Teamwork:</strong> We believe in the power of collaboration and work together to achieve our goals.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Testimonials Section -->
+<div class="container mt-5">
+    <h2 class="text-center text-white">What Our Clients Say</h2>
+    <div class="row mt-4 fs-5">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <p class="card-text">"The team did an amazing job on my yard! It looks better than ever. Highly recommend their services!"</p>
+                    <p class="card-text"><strong>- John Doe</strong></p>
                 </div>
-            {% endfor %}
+            </div>
         </div>
-
-        <!-- Previous & Next Controls -->
-        <button class="carousel-control-prev" type="button" data-bs-target="#yardCleaningCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#yardCleaningCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <p class="card-text">"Professional and efficient. They transformed my garden in just a few hours. Very satisfied with the results."</p>
+                    <p class="card-text"><strong>- Jane Smith</strong></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <p class="card-text">"Excellent service! The staff was friendly and the work was top-notch. Will definitely use them again."</p>
+                    <p class="card-text"><strong>- Michael Brown</strong></p>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

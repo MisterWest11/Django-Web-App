@@ -1,26 +1,32 @@
 {% extends 'yardapp/base.html' %}
-
+{% load widget_tweaks %}
 {% block content %}
 <div class="container mt-5">
-
-    <h2 class="text-center">Service Request Form</h2>
-    
-    <form method="post">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        <div>
-            <label for="services">Select Services:</label>
-            {{ form.services }}
+    <div class="card">
+        <div class="card-header text-center bg-success text-white">
+            <h2>Fill in Form to Request a Service</h2>
         </div>
-        <div>
-            <label for="date">Date:</label>
-            {{ form.date }}
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                <div class="form-group">
+                    <label for="services">Select Services:</label>
+                    {{ form.services }}
+                </div>
+                <div class="form-group">
+                    <label for="date">Date:</label>
+                    {{ form.date|add_class:"form-control" }}
+                </div>
+                <div class="form-group">
+                    <label for="special_instructions">Special Instructions:</label>
+                    {{ form.special_instructions|add_class:"form-control" }}
+                </div>
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-success">Submit Request</button>
+                </div>
+            </form>
         </div>
-        <div>
-            <label for="special_instructions">Special Instructions:</label>
-            {{ form.special_instructions }}
-        </div>
-        <button type="submit">Submit Request</button>
-    </form>
+    </div>
 </div>
 {% endblock %}

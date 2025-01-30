@@ -8,6 +8,7 @@ from django.conf import settings
 from django.core.mail import send_mail, EmailMessage
 from django.template.loader import render_to_string
 from django.contrib import messages
+from django.core.files.base import ContentFile
 # Register your models here.
 
 @admin.register(ServiceRequest)
@@ -44,7 +45,7 @@ class ServiceRequestAdmin(admin.ModelAdmin):
         pdf.drawString(100, 740, f"Address: {service_request.address}")
         pdf.drawString(100, 720, f"Date: {service_request.date}")
         pdf.drawString(100, 700, f"Status: {service_request.status}")
-        pdf.drawString(100, 680, f"Total Cost: ${sum([s.cost for s in service_request.services.all()])}")
+        pdf.drawString(100, 680, f"Total Cost: R{sum([s.price for s in service_request.services.all()])}")
         pdf.drawString(100, 660, f"Thank you for using Yard Cleaning Service!")
         pdf.save()
         buffer.seek(0)
@@ -63,41 +64,39 @@ class ServiceRequestAdmin(admin.ModelAdmin):
             Details:
 
             - Services: {', '.join([service.service_name for service in service_request.services.all()])}
+
             - Address: {service_request.address}
+
             - Date: {service_request.date}
+
             - Status: {service_request.status}
-            - Total Cost: ${sum([s.cost for s in service_request.services.all()])}
+
+            - Total Cost: R{sum([s.price for s in service_request.services.all()])}
 
             Thank you for using Yard Cleaning Service!
             Best regards,
             Yard Cleaning Service Team
             """
 
+            #generate PDF receipt
+            pdf_buffer = self.generate_receipt_pdf(service_request)
+            pdf_content = pdf_buffer.getvalue()
+            pdf_name = f"ServiceRequest_{service_request.id}.pdf"
+
+            # Send email to the user
             email = EmailMessage(
                 subject=email_subject,
                 body=email_body,
                 from_email=settings.EMAIL_HOST_USER,
                 to=[service_request.user.email],
             )
-            email.send()
+
+            # Attach PDF receipt to the email
+            email.attach(pdf_name, pdf_content, 'application/pdf')
+
+            email.send(fail_silently=False)
         except Exception as e:
             self.message_user(request, f"Failed to send an email to {service_request.user.email}. Error: {str(e)}", level=messages.ERROR)
-
-    
-    # def send_email(self, request , service_request, status):
-        # Send email to the user with attached PDF receipt
-        #pdf_buffer = self.generate_receipt_pdf(service_request)
-        #email_subject = f"Your Service Request Has Been {status}"
-        #email_body = f"Dear {service_request.user.first_name},\n\nYour service request has been {status.lower()}.\nPlease find the receipt attached.\n\nThank you!"
-        #email = EmailMessage(
-        #    subject = email_subject,
-        #    body = email_body,
-        #    from_email = settings.EMAIL_HOST_USER,
-        #    to = [service_request.user.email],
-        #)
-        
-        #email.attach(f"ServiceRequest_{status}.pdf", pdf_buffer.getvalue(), 'application/pdf')
-        #email.send()
         
 # Register other models
 admin.site.register(UserProfile)

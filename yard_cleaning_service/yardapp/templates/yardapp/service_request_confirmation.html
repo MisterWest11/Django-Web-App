@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container mt-5">
     <div class="card">
-        <div class="card-header text-center">
+        <div class="card-header text-center bg-success text-white">
             <h2>Service Request Confirmation</h2>
         </div>
         <div class="card-body">
@@ -14,15 +14,15 @@
             <ul class="list-group mb-3">
                 {% for service in services %}
                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                    {{ service.name }}
-                    <span class="badge badge-primary badge-pill">${{ service.price }}</span>
+                    {{ service.service_name }}
+                    <span class="badge badge-primary badge-pill">R{{ service.price }}</span>
                 </li>
                 {% endfor %}
             </ul>
-            <h3 class="text-right">Total Cost: ${{ total_cost }}</h3>
+            <h3 class="text-right">Total Cost: R{{ total_cost }}</h3>
             <form method="post" class="text-center mt-4">
                 {% csrf_token %}
-                <button type="submit" name="confirm_request" class="btn btn-primary">Confirm Request</button>
+                <button type="submit" name="confirm_request" class="btn btn-success">Confirm Request</button>
             </form>
         </div>
     </div>

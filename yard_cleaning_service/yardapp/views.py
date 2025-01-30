@@ -68,8 +68,17 @@ def place_order(request, service_id):
 
 @login_required
 def profile(request):
-    orders = Order.objects.filter(user=request.user)  # Fetch orders for the logged-in user
-    return render(request, 'yardapp/profile.html', {'orders': orders})
+    orders = ServiceRequest.objects.filter(user=request.user)  # Fetch orders for the logged-in user
+    
+    pending_requests = ServiceRequest.objects.filter(user=request.user, status='Pending') # Fetch pending requests for the logged-in user
+
+   # accepted_requests = ServiceRequest.objects.filter(user=request.user, status='Accepted') # Fetch accepted requests for the logged-in user
+
+    context = {
+        'requests': orders,
+        'pending_requests': pending_requests,
+    }
+    return render(request, 'yardapp/profile.html', context)
 
 # logout view
 def logout_view(request):
@@ -127,6 +136,8 @@ def service_request_confirmation(request):
     # Retrieve the ServiceRequest instance
     service_request = get_object_or_404(ServiceRequest, id=service_request_id)
 
+    
+
     # Calculate total cost of the selected services
     total_cost = sum(service.price for service in service_request.services.all())
 
@@ -139,15 +150,16 @@ def service_request_confirmation(request):
                 f"""Hello {service_request.user.first_name},
 
 Thank you for your service request! Below are the details:
+
 - Services: {', '.join(service.service_name for service in service_request.services.all())}
 
 - Address: {service_request.address}
 
 - Date: {service_request.date}
 
-- Status: {service_request.status}
+- Total Cost: R{total_cost}
 
-- Total Cost: ${total_cost}
+Your request is currently {service_request.status}. We will notify you once it has been accepted or rejected.
 
 We will contact you soon.
 
@@ -174,9 +186,9 @@ A new service request has been submitted:
 
 - Date: {service_request.date}
 
--Staus: {service_request.status}
+- Total Cost: R{total_cost}
 
-- Total Cost: ${total_cost}
+The request is currently {service_request.status}. Kindly Accept or Reject the request.
 
 Please review and follow up.
 
@@ -201,6 +213,8 @@ Your service request has been {service_request.status}! Here are the details:
 - Address: {service_request.address}
 
 - Date: {service_request.date}
+
+- Status: {service_request.status}
 
 - Total Cost: ${total_cost}
 
