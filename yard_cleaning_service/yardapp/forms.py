@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from .models import UserProfile, Service, ServiceRequest
+from datetime import date
 
 # Custom Login Form
 class EmailLoginForm(forms.Form):
@@ -77,3 +78,9 @@ class ServiceRequestForm(forms.ModelForm):
             'date': forms.DateInput(attrs={'type': 'date'}),
             'special_instructions': forms.TextInput(attrs={'rows': 3}),
         }
+
+    def clean_date(self):
+        selected_date = self.cleaned_data['date']
+        if selected_date < date.today():
+            raise forms.ValidationError("The date cannot be in the past.")
+        return selected_date

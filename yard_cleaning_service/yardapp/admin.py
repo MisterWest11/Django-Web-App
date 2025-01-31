@@ -63,15 +63,15 @@ class ServiceRequestAdmin(admin.ModelAdmin):
 
             Details:
 
-            - Services: {', '.join([service.service_name for service in service_request.services.all()])}
+             Services: {', '.join([service.service_name for service in service_request.services.all()])}
 
-            - Address: {service_request.address}
+             Address: {service_request.address}
 
-            - Date: {service_request.date}
+             Date: {service_request.date}
 
-            - Status: {service_request.status}
+             Status: {service_request.status}
 
-            - Total Cost: R{sum([s.price for s in service_request.services.all()])}
+             Total Cost: R{sum([s.price for s in service_request.services.all()])}
 
             Thank you for using Yard Cleaning Service!
             Best regards,

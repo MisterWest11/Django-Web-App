@@ -178,15 +178,15 @@ The Yard Cleaning Service Team
 
 A new service request has been submitted:
 
-- User: {service_request.user.first_name} {service_request.user.last_name}
+ User: {service_request.user.first_name} {service_request.user.last_name}
 
-- Services: {', '.join(service.service_name for service in service_request.services.all())}
+ Services: {', '.join(service.service_name for service in service_request.services.all())}
 
-- Address: {service_request.address}
+ Address: {service_request.address}
 
-- Date: {service_request.date}
+ Date: {service_request.date}
 
-- Total Cost: R{total_cost}
+ Total Cost: R{total_cost}
 
 The request is currently {service_request.status}. Kindly Accept or Reject the request.
 
